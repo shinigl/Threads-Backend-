@@ -1,6 +1,6 @@
 // Import the User model to fetch user data from the database
 import User from "../models/userModel.js";
-import jwt from "jsonwebtoken"; // Import JWT for token verification
+import jwt from "jsonwebtoken"; 
 
 // Middleware function to protect routes (ensures only authenticated users can access)
 const protectRoute = async (req, res, next) => {
