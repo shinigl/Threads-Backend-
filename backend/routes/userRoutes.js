@@ -1,5 +1,5 @@
 import express from "express";
-import { signupUser,loginUser,logoutUser,followUnfollowUser,updateUser } from "../controllers/userController.js";
+import { signupUser,loginUser,logoutUser,followUnfollowUser,updateUser, getUserProfile } from "../controllers/userController.js";
 import protectRoute from "../middlewares/protectRoute.js";
 
 const router = express.Router();
@@ -9,6 +9,7 @@ router.post('/login',loginUser)
 router.post('/logout',logoutUser)
 router.post('/follow/:id',protectRoute,followUnfollowUser)
 router.post('/update/:id',protectRoute,updateUser)
+router.get('/profile/:username',protectRoute,getUserProfile)
 
 export default router ;
 

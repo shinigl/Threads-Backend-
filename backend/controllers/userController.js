@@ -3,6 +3,22 @@ import bcrypt from "bcryptjs"
 import generateTokenAndSetCookie from '../utils/helper/generateTokenAndSetCookie.js';
 
 
+//See/Get profile 
+const getUserProfile =async(req,res)=>{
+    const {username} = req.params ;
+    console.log(req.params);
+    console.log(username);
+    try{
+      const user = await User.findOne({username}).select("-password -updatedAt")
+
+      if(!user) return res.status(404).json({message:"Profile not available"})
+      res.status(201).json(user)
+    }
+    catch(err){
+        res.status(500).json({message:err.message})
+    }
+}
+
 //User Sign up 
 const signupUser = async(req,res)=>{
     try{
@@ -148,4 +164,4 @@ const updateUser = async(req,res)=>{
         res.status(500).json({message:err.message})
      }
 }
-export {signupUser , loginUser,logoutUser, followUnfollowUser,updateUser} ;
+export {signupUser , loginUser,logoutUser, followUnfollowUser,updateUser ,getUserProfile} ;
