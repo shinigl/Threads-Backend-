@@ -9,11 +9,11 @@ const getUserProfile =async(req,res)=>{
     try{
       const user = await User.findOne({username}).select("-password -updatedAt")
 
-      if(!user) return res.status(404).json({message:"Profile not available"})
+      if(!user) return res.status(404).json({error:"Profile not available"})
       res.status(201).json(user)
     }
     catch(err){
-        res.status(500).json({message:err.message})
+        res.status(500).json({error:err.message})
     }
 }
 
@@ -36,7 +36,7 @@ const signupUser = async(req,res)=>{
     )
     //If user already exist 
     if(user) {
-        return res.status(400).json({message:"User already exist"})
+        return res.status(400).json({error:"User already exist"})
     }
 
     //Hashed Password
@@ -62,12 +62,12 @@ const signupUser = async(req,res)=>{
 
         })
     } else{
-        res.status(400).json({message:"Invalid user data"})
+        res.status(400).json({error:"Invalid user data"})
     }
 
     }
     catch(err){
-            res.status(500).json({message:err.message})
+            res.status(500).json({error:err.message})
     }
 }
 
@@ -77,7 +77,7 @@ const loginUser = async(req,res)=>{
        const {username,password} = req.body ;
        const user = await User.findOne({username})
        const isPasswordCorrect = await bcrypt.compare(password,user?.password || "")
-       if( !user || !isPasswordCorrect) return res.status(400).json({message:"Invalid username or password"})
+       if( !user || !isPasswordCorrect) return res.status(400).json({error:"Invalid username or password"})
       generateTokenAndSetCookie(user._id,res)
       res.status(200).json({
         _id : user._id ,
@@ -88,7 +88,7 @@ const loginUser = async(req,res)=>{
 )
 }
     catch(err){
-       res.status(500).json({message:err.message})
+       res.status(500).json({error:err.message})
     }
 }
 
@@ -99,7 +99,7 @@ const logoutUser = async(req,res)=>{
      res.status(200).json({message:"User logged out successfully"})
     }
     catch(err){
-        res.status(500).json({message:err.message})
+        res.status(500).json({error:err.message})
      }
 }
 const followUnfollowUser = async(req,res)=>{
@@ -128,7 +128,7 @@ const followUnfollowUser = async(req,res)=>{
 		}
     }
     catch(err){
-        res.status(500).json({message:err.message})
+        res.status(500).json({error:err.message})
     }
 }
 
@@ -138,10 +138,10 @@ const updateUser = async(req,res)=>{
     const userId = req.user._id ;
     try{
         let user = await User.findById(userId);
-        if(!user) return res.status(400).json({message:"user not found"});
+        if(!user) return res.status(400).json({error:"user not found"});
         
         if(req.params.id !== userId.toString()){
-            return res.status(400).json({message:"You can't update other user's profile"})
+            return res.status(400).json({error:"You can't update other user's profile"})
         }
         if(password){
             const salt = await bcrypt.genSalt(10);
@@ -159,7 +159,7 @@ const updateUser = async(req,res)=>{
         res.status(200).json({message:"User profile updated successfully"})
     }
     catch(err){
-        res.status(500).json({message:err.message})
+        res.status(500).json({error:err.message})
      }
 }
 export {signupUser , loginUser,logoutUser, followUnfollowUser,updateUser ,getUserProfile} ;
