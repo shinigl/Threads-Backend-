@@ -6,8 +6,6 @@ import generateTokenAndSetCookie from '../utils/helper/generateTokenAndSetCookie
 //See/Get profile 
 const getUserProfile =async(req,res)=>{
     const {username} = req.params ;
-    console.log(req.params);
-    console.log(username);
     try{
       const user = await User.findOne({username}).select("-password -updatedAt")
 
