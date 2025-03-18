@@ -84,6 +84,8 @@ const loginUser = async(req,res)=>{
         name : user.name ,
         email : user.email ,
         username : user.username,
+        bio : user.bio,
+        profilePic : user.profilePic ,
     }
 )
 }
