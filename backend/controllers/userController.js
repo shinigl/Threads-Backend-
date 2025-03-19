@@ -166,11 +166,7 @@ const updateUser = async (req, res) => {
             }
         
             // Upload the new image file
-            const uploadedResponse = await cloudinary.uploader.upload(req.body.profilePic, {
-                folder: "profile_pics", // Store in a specific folder
-                resource_type: "image", // Ensure it's treated as an image
-                transformation: [{ width: 500, quality: "auto" }] // Optimize image
-            });
+            const uploadedResponse = await cloudinary.uploader.upload(req.body.profilePic);
         
             user.profilePic = uploadedResponse.secure_url; // Save Cloudinary URL
         }

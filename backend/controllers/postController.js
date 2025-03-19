@@ -1,11 +1,11 @@
 import User from "../models/userModel.js";
 import Post from "../models/postModel.js" ;
-
+import {v2 as cloudinary} from 'cloudinary';
 // Create a new post
 const createPost = async (req, res) => {
     try {
-        const { postedBy, text, img } = req.body;
-
+        const { postedBy, text } = req.body;
+        let {img} = req.body ;
         // Check required fields
         if (!postedBy || !text) {
             return res.status(400).json({ message: "PostedBy and text fields are required" });
@@ -20,6 +20,10 @@ const createPost = async (req, res) => {
         // Ensure user is authorized to create a post
         if (!user._id.equals(req.user._id)) {
             return res.status(403).json({ message: "You are not authorized to create a post" });
+        }
+        if(img){
+            const uploadedResponse = await cloudinary.uploader.upload(img);
+            img = uploadedResponse.secure_url ;
         }
 
         // Check text length
