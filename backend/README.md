@@ -49,4 +49,4 @@ This is the backend of a Threads clone, handling user authentication, post manag
 | DELETE | /posts/:id       | Delete a post |
 | POST   | /posts/:id/like  | Like a post |
 | POST   | /posts/:id/comment | Comment on a post |
-| POST   | /users/follow/:id | Follow a user |
+| POST   | /users/follow/:id | Follow a user|
