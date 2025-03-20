@@ -20,7 +20,8 @@ const postSchema = mongoose.Schema({
     replies:[{
             userId:{
                 type: mongoose.Schema.Types.ObjectId,
-                required:true
+                required:true,
+                ref: "User" ,
             },
             text:{
                 type:String,
@@ -31,6 +32,7 @@ const postSchema = mongoose.Schema({
             },
             username:{
                 type:String
+                
             }
         }]
     
