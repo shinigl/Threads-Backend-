@@ -219,7 +219,7 @@ const updateUser = async (req, res) => {
             return res.status(403).json({ error: "You can't update another user's profile" });
         }
 
-        // Update password if provided
+      
         if (password) {
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(password, salt);

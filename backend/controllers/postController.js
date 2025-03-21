@@ -102,33 +102,32 @@ const likeUnlikePost = async(req,res)=>{
 } 
 
 //Reply to post
-const replyToPost = async(req,res)=>{
-    try{
-        const {text} = req.body ;
-        const postId = req.params.postId ;
-        const userId = req.user._id ;
-        const post = await Post.findById(postId);
-        const userProfilePic = req.user.ProfilePic ;
-        const username = req.user.username ;
-       
-        if(!text){
-            return res.status(400).json({message:"Reply text is required"}) ;
-        }
-        
-        if(!post){
-            return res.status(404).json({message:"Post not found"}) ;
-        }
-        const reply = {userId , text , userProfilePic , username};
-        post.replies.push(reply);
-        await post.save();
-        res.status(200).json({message:"Reply added successfully",reply}); 
 
-
+const replyToPost = async (req, res) => {
+    try {
+      const { text } = req.body;
+      const postId = req.params.postId;
+      const userId = req.user._id;
+      const post = await Post.findById(postId);
+      const userProfilePic = req.user.profilePic; 
+      const username = req.user.username; 
+  
+      if (!text) {
+        return res.status(400).json({ message: "Reply text is required" });
+      }
+  
+      if (!post) {
+        return res.status(404).json({ message: "Post not found" });
+      }
+  
+      const reply = { userId, text, userProfilePic, username };
+      post.replies.push(reply);
+      await post.save();
+      res.status(200).json({ message: "Reply added successfully", reply });
+    } catch (err) {
+      res.status(500).json({ message: err.message });
     }
-    catch(err){
-        res.status(500).json({message:err.message});
-    }
-}
+  };
 
 //Get feed posts
 const getFeedPosts = async(req,res)=>{
@@ -162,4 +161,33 @@ const getUserPosts = async(req,res)=>{
         res.status(500).json({error:err.message})
     }
 }
-export {createPost,getPost,deletePost,likeUnlikePost, replyToPost, getFeedPosts,getUserPosts} ;
+
+// Delete a reply
+const deleteReply = async (req, res) => {
+    try {
+      const { postId, commentId } = req.params;
+      const userId = req.user._id;
+      const post = await Post.findById(postId);
+  
+      if (!post) {
+        return res.status(404).json({ message: "Post not found" });
+      }
+  
+      const reply = post.replies.find((r) => r._id.toString() === commentId);
+      if (!reply) {
+        return res.status(404).json({ message: "Reply not found" });
+      }
+  
+      if (reply.userId.toString() !== userId.toString()) {
+        return res.status(403).json({ message: "Unauthorized to delete this reply" });
+      }
+  
+      post.replies = post.replies.filter((r) => r._id.toString() !== commentId);
+      await post.save();
+  
+      res.status(200).json({ message: "Reply deleted successfully" });
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  };
+export {createPost,getPost,deletePost,likeUnlikePost, replyToPost, getFeedPosts,getUserPosts ,deleteReply} ;
