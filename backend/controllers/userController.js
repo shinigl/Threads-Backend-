@@ -147,17 +147,76 @@ const followUnfollowUser = async(req,res)=>{
 
 
 //Update User
+// const updateUser = async (req, res) => {
+//     const { name, email, username, password, bio } = req.body;
+//     let { profilePic } = req.body;
+//     const userId = req.user._id;
+
+//     try {
+//         let user = await User.findById(userId);
+//         if (!user) return res.status(400).json({ error: "User not found" });
+
+//         if (req.params.id !== userId.toString()) {
+//             return res.status(400).json({ error: "You can't update another user's profile" });
+//         }
+
+//         // Update password if provided
+//         if (password) {
+//             const salt = await bcrypt.genSalt(10);
+//             const hashedPassword = await bcrypt.hash(password, salt);
+//             user.password = hashedPassword;
+//         }
+
+//         // Handle profile picture upload
+//         if (req.body.profilePic) {
+//             // Delete old Cloudinary image if it exists
+//             if (user.profilePic && user.profilePic.includes("cloudinary")) {
+//                 const publicId = user.profilePic.split("/").pop().split(".")[0];
+//                 await cloudinary.uploader.destroy(publicId);
+//             }
+        
+//             // Upload the new image file
+//             const uploadedResponse = await cloudinary.uploader.upload(req.body.profilePic);
+        
+//             user.profilePic = uploadedResponse.secure_url; // Save Cloudinary URL
+//         }
+
+//         // Update user fields
+//         user.name = name || user.name;
+//         user.email = email || user.email;
+//         user.username = username || user.username;
+//         user.bio = bio || user.bio;
+//         user.profilePic = profilePic || user.profilePic;
+
+//         await user.save(); // Save updates
+
+//         //Password should be null in response
+//         user.password = null
+
+//         const successMessage = password ? "User profile and password updated successfully" : "User profile updated successfully";
+//         res.status(200).json({ message: successMessage, user });
+//     } catch (err) {
+//         res.status(500).json({ error: err.message });
+//     }
+// };
+
 const updateUser = async (req, res) => {
+    console.log("Request received for update:", req.body);
+
     const { name, email, username, password, bio } = req.body;
     let { profilePic } = req.body;
-    const userId = req.user._id;
+    const userId = req.user ? req.user._id : null;
+
+    if (!userId) {
+        return res.status(401).json({ error: "Unauthorized: No user found in request" });
+    }
 
     try {
         let user = await User.findById(userId);
         if (!user) return res.status(400).json({ error: "User not found" });
 
         if (req.params.id !== userId.toString()) {
-            return res.status(400).json({ error: "You can't update another user's profile" });
+            return res.status(403).json({ error: "You can't update another user's profile" });
         }
 
         // Update password if provided
@@ -168,17 +227,13 @@ const updateUser = async (req, res) => {
         }
 
         // Handle profile picture upload
-        if (req.body.profilePic) {
-            // Delete old Cloudinary image if it exists
+        if (profilePic && profilePic.startsWith("data:image")) {
             if (user.profilePic && user.profilePic.includes("cloudinary")) {
                 const publicId = user.profilePic.split("/").pop().split(".")[0];
                 await cloudinary.uploader.destroy(publicId);
             }
-        
-            // Upload the new image file
-            const uploadedResponse = await cloudinary.uploader.upload(req.body.profilePic);
-        
-            user.profilePic = uploadedResponse.secure_url; // Save Cloudinary URL
+            const uploadedResponse = await cloudinary.uploader.upload(profilePic);
+            user.profilePic = uploadedResponse.secure_url;
         }
 
         // Update user fields
@@ -186,18 +241,21 @@ const updateUser = async (req, res) => {
         user.email = email || user.email;
         user.username = username || user.username;
         user.bio = bio || user.bio;
-        user.profilePic = profilePic || user.profilePic;
 
         await user.save(); // Save updates
 
-        //Password should be null in response
-        user.password = null
+        // Exclude password from response
+        user.password = null;
 
+        
+        
         const successMessage = password ? "User profile and password updated successfully" : "User profile updated successfully";
         res.status(200).json({ message: successMessage, user });
     } catch (err) {
+      
         res.status(500).json({ error: err.message });
     }
 };
+
 
 export {signupUser , loginUser,logoutUser, followUnfollowUser,updateUser ,getUserProfile} ;

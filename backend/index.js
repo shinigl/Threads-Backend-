@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import userRoutes from "./routes/userRoutes.js";
 import postRoutes from "./routes/postRoutes.js"
 import {v2 as cloudinary} from "cloudinary" ;
+import cors from 'cors'
 
 dotenv.config();
 connectDB();
@@ -27,6 +28,12 @@ app.use(cookieParser());
 
 app.use("/api/users",userRoutes)
 app.use("/api/posts",postRoutes)
+
+//Cors 
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true
+  }));
 
 
 app.listen(PORT,()=> console.log(`Server started at port number : ${PORT}`))

@@ -12,4 +12,4 @@ router.delete('/:id',protectRoute, deletePost);
 router.post('/like/:postId',protectRoute, likeUnlikePost);
 router.post('/reply/:postId',protectRoute, replyToPost);
 
-export default router ;
+export default router;
