@@ -24,16 +24,15 @@ app.use(express.json({limit:"50mb"})) //Parses data coming from req.body
 app.use(express.urlencoded({extended: true})) // To parse nested data from req.body
 app.use(cookieParser());
 
+//Cors
+app.use(cors({
+  origin: ['https://threads-aniket.vercel.app', 'http://localhost:5173'],
+  credentials: true
+}));
 //Routes
 
 app.use("/api/users",userRoutes)
 app.use("/api/posts",postRoutes)
-
-//Cors 
-app.use(cors({
-    origin: ['https://threads-aniket.vercel.app','http://localhost:5173'],
-    credentials: true
-  }));
 
 
 app.listen(PORT,()=> console.log(`Server started at port number : ${PORT}`))
