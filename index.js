@@ -31,7 +31,7 @@ app.use("/api/posts",postRoutes)
 
 //Cors 
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: ['https://threads-aniket.vercel.app','http://localhost:5173'],
     credentials: true
   }));
 

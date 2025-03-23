@@ -8,6 +8,7 @@ const connectDB = async () => {
     }
     catch (error) {
         console.log(`Error in connecting datbase :`, error)
+        process.exit(1); //Stop the server if connection fails
     }
 }
 
