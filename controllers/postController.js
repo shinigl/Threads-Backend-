@@ -147,6 +147,7 @@ const getFeedPosts = async(req,res)=>{
     }
 }
 
+//Get user posts
 const getUserPosts = async(req,res)=>{
     const {username} = req.params ;
     try{

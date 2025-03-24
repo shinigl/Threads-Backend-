@@ -29,5 +29,5 @@ const protectRoute = async (req, res, next) => {
     }
 };
 
-// Export the middleware so it can be used in other files
+
 export default protectRoute;
