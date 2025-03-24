@@ -27,6 +27,8 @@ app.use(cookieParser());
 //Cors
 app.use(cors({
   origin: ['https://threads-aniket.vercel.app', 'http://localhost:5175'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], 
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
 //Routes
