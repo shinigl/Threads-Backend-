@@ -22,7 +22,7 @@ const userSchema = new mongoose.Schema({
     },
     profilePic: {
         type: String,
-        default: "", // Default profile pic will be empty
+        default: "", 
     },
     followers: {
         type: [mongoose.Schema.Types.ObjectId],
